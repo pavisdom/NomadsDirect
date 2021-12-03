@@ -13,7 +13,7 @@ from django.db import models
 
 class Experience(models.Model):
     expid = models.AutoField(primary_key=True)
-    # exptag = models.ForeignKey(ExperienceTags, on_delete=models.PROTECT, null=True)
+    exptag = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(null=True)
     cover_image = models.ImageField()
 
@@ -44,7 +44,7 @@ class HotelInfo(models.Model):
 
 class HotelReservationItem(models.Model):
     reservationItemId = models.AutoField(primary_key=True)
-    hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True)
+    hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True, related_name='hotel_reservation')
     reservation_item = models.CharField(max_length=200, blank=True, null=True)
     priceinfo_usd = models.DecimalField(decimal_places=2,max_digits=10, blank=True, null=True)
     priceinfo_lkr = models.DecimalField(decimal_places=2,max_digits=10, blank=True, null=True)
