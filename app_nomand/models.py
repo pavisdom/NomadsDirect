@@ -70,7 +70,7 @@ class HotelAmenities(models.Model):
 
 class HotelImages(models.Model):
     id = models.AutoField(primary_key=True)
-    hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True)
+    hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True,related_name='hotel_image')
     image  = models.ImageField(max_length=200, blank=True, null=True)
 
     def __str__(self):
