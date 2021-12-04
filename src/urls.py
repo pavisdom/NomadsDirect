@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('services/experiencesList',nomand_view.ExperienceAPIView.as_view()),
+    path('services/LocationCityList',nomand_view.LocationCityAPIView.as_view()),
+    path('services/LocationCountryList',nomand_view.LocationCountryAPIView.as_view()),
     path('services/featuredHotels',nomand_view.FeaturedHotelsAPIView.as_view()),
     path('services/search',nomand_view.HotelSearchView.as_view()),
     path('services/reservation',nomand_view.BookingAPIView.as_view()),

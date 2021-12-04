@@ -6,15 +6,29 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app_nomand.models import Experience, HotelInfo
+from app_nomand.models import Experience, HotelInfo, LocationCity, LocationCountry
 from app_nomand.serializers import ExperienceSerializer, FeaturedHotelsSerializer, SearchHotelsSerializer, \
-    HotelInfoSerializer, GuestInfoSerializer, BookingInfoSerializer
+    HotelInfoSerializer, GuestInfoSerializer, BookingInfoSerializer, LocationCitySerializer, LocationCountrySerializer
 
 
 class ExperienceAPIView(APIView):
     def get(self,request):
         qs = Experience.objects.all()
         serializer = ExperienceSerializer(qs,many=True)
+        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+
+
+class LocationCityAPIView(APIView):
+    def get(self,request):
+        qs = LocationCity.objects.all()
+        serializer = LocationCitySerializer(qs,many=True)
+        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+
+
+class LocationCountryAPIView(APIView):
+    def get(self,request):
+        qs = LocationCountry.objects.all()
+        serializer = LocationCountrySerializer(qs,many=True)
         return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
 
