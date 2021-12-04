@@ -24,13 +24,40 @@ class Experience(models.Model):
         db_table = 'Experience'
 
 
+class LocationCountry(models.Model):
+    countryid = models.AutoField(primary_key=True)
+    country_name = models.CharField(max_length=200)
+    country_code = models.CharField(max_length=200, unique=True)
+
+    def __str__(self):
+        return f"{str(self.countryid)}. {self.country_name} - {self.country_code}"
+
+    class Meta:
+        db_table = 'LocationCountry'
+
+
+class LocationCity(models.Model):
+    cityid = models.AutoField(primary_key=True)
+    country = models.ForeignKey(LocationCountry,on_delete=models.PROTECT, null=True)
+    city_name = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return f"{str(self.cityid)}. {self.city_name}"
+
+    class Meta:
+        db_table = 'LocationCity'
+
+
+
 class HotelInfo(models.Model):
     hotelid = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(null=True,blank=True)
     location_street = models.CharField(max_length=200, blank=True, null=True)
-    location_city = models.CharField(max_length=200, blank=True, null=True)
-    location_country = models.CharField(max_length=200, blank=True, null=True)
+    # location_city = models.CharField(max_length=200, blank=True, null=True)
+    location_city = models.ForeignKey(LocationCity,on_delete=models.PROTECT, null=True)
+    # location_country = models.CharField(max_length=200, blank=True, null=True)
+    location_country = models.ForeignKey(LocationCountry,on_delete=models.PROTECT, null=True)
     email = models.EmailField(blank=True, null=True)
     contact_number = models.CharField(max_length=200, blank=True, null=True)
     experiances_tags = models.ManyToManyField(Experience)
@@ -79,29 +106,6 @@ class HotelImages(models.Model):
     class Meta:
         db_table = 'HotelImages'
 
-
-class LocationCountry(models.Model):
-    countryid = models.AutoField(primary_key=True)
-    country_name = models.CharField(max_length=200)
-    country_code = models.CharField(max_length=200, unique=True)
-
-    def __str__(self):
-        return f"{str(self.countryid)}. {self.country_name} - {self.country_code}"
-
-    class Meta:
-        db_table = 'LocationCountry'
-
-
-class LocationCity(models.Model):
-    cityid = models.AutoField(primary_key=True)
-    country = models.ForeignKey(LocationCountry,on_delete=models.PROTECT, null=True)
-    city_name = models.CharField(max_length=200, blank=True, null=True)
-
-    def __str__(self):
-        return f"{str(self.cityid)}. {self.city_name}"
-
-    class Meta:
-        db_table = 'LocationCity'
 
 
 class GuestInfo(models.Model):
