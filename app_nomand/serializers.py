@@ -1,11 +1,22 @@
 from rest_framework import serializers
 
-from app_nomand.models import Experience, HotelInfo, HotelReservationItem, BookingInfo, GuestInfo, HotelImages
+from app_nomand.models import Experience, HotelInfo, HotelReservationItem, BookingInfo, GuestInfo, HotelImages, \
+    LocationCountry, LocationCity
 
 
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
+        fields = "__all__"
+
+class LocationCountrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LocationCountry
+        fields = "__all__"
+
+class LocationCitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LocationCity
         fields = "__all__"
 
 
@@ -16,12 +27,16 @@ class ExperienceTagSerializer(serializers.ModelSerializer):
 
 
 class FeaturedHotelsSerializer(serializers.ModelSerializer):
+    location_city = LocationCitySerializer(read_only=True)
+    location_country = LocationCountrySerializer(read_only=True)
     class Meta:
         model = HotelInfo
         fields = ['hotelid','name','description','location_street','location_city','location_country']
 
 
 class SearchHotelsSerializer(serializers.ModelSerializer):
+    location_city = LocationCitySerializer(read_only=True)
+    location_country = LocationCountrySerializer(read_only=True)
     experiances_tags = ExperienceTagSerializer(many=True,read_only=True)
     class Meta:
         model = HotelInfo
@@ -41,6 +56,8 @@ class HotelImagesSerializer(serializers.ModelSerializer):
 
 
 class HotelInfoSerializer(serializers.ModelSerializer):
+    location_city = LocationCitySerializer(read_only=True)
+    location_country = LocationCountrySerializer(read_only=True)
     experiances_tags = ExperienceTagSerializer(many=True,read_only=True)
     hotel_reservation = HotelReservationItemSerializer(many=True,read_only=True)
     # # SlugRelatedField won't work: error FileNotFoundError: [Errno 2] No such file or directory:
