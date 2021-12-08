@@ -105,6 +105,8 @@ class BookingAPIView(APIView):
         else:
             return Response({"message": "booking info invalid","data":booking_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+        # todo: an email sends to hotel 
+
         return Response({"message": "success","data":booking_serializer.data}, status=status.HTTP_200_OK)
 
 
