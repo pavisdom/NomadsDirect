@@ -66,7 +66,7 @@ class HotelInfoAPIView(APIView):
 
     def get(self,request,id):
         obj = self.get_object(id)
-        serializer = HotelInfoSerializer(obj)
+        serializer = HotelInfoSerializer(obj,context={'request':request})
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
 
