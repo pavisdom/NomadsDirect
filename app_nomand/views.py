@@ -44,15 +44,23 @@ class HotelSearchView(APIView):
         """
         :param request: {
                             "country" : "Sri Lanka",
-                            "checkin" : "ISO FORMAT DATE",
-                            "checkout" : "ISO FORMAT DATE",
-                            "pax" : 2,
+                            'city": 2,
+                            # "checkin" : "ISO FORMAT DATE",
+                            # "checkout" : "ISO FORMAT DATE",
+                            # "pax" : 2,
                             "ExperianceTags" : [12,34,1]
                         }
         TODO: filtration should have implemented
         :return:
         """
+        requestData = request.data
+        ex_tag = requestData.get("ExperianceTags",[])
+        city = requestData.get("city")
         qs = HotelInfo.objects.all()
+        if city:
+            qs = qs.filter(location_city__cityid=city)
+        if len(ex_tag):
+            qs = qs.filter(experiances_tags__expid__in=ex_tag)
         serializer = SearchHotelsSerializer(qs, many=True)
         return Response({"data": serializer.data}, status=status.HTTP_200_OK)
 
