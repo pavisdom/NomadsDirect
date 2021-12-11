@@ -29,9 +29,11 @@ class ExperienceTagSerializer(serializers.ModelSerializer):
 class FeaturedHotelsSerializer(serializers.ModelSerializer):
     location_city = LocationCitySerializer(read_only=True)
     location_country = LocationCountrySerializer(read_only=True)
+    experiances_tags = ExperienceTagSerializer(many=True,read_only=True)
+
     class Meta:
         model = HotelInfo
-        fields = ['hotelid','name','description','location_street','location_city','location_country']
+        fields = ['hotelid','name','description','location_street','location_city','location_country','experiances_tags']
 
 
 class SearchHotelsSerializer(serializers.ModelSerializer):
