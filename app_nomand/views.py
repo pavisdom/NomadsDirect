@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render
 
@@ -9,6 +10,10 @@ from rest_framework.views import APIView
 from app_nomand.models import Experience, HotelInfo, LocationCity, LocationCountry
 from app_nomand.serializers import ExperienceSerializer, FeaturedHotelsSerializer, SearchHotelsSerializer, \
     HotelInfoSerializer, GuestInfoSerializer, BookingInfoSerializer, LocationCitySerializer, LocationCountrySerializer
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
+from django.template import Context
+
 
 
 class ExperienceAPIView(APIView):
@@ -98,6 +103,7 @@ class BookingAPIView(APIView):
         }
         :return:
         """
+
         requestData = request.data
         guest_serializer = GuestInfoSerializer(data=requestData['guestInfo'])
         if guest_serializer.is_valid():
@@ -113,8 +119,22 @@ class BookingAPIView(APIView):
         else:
             return Response({"message": "booking info invalid","data":booking_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
-        # todo: an email sends to hotel 
+        # todo: an email sends to hotel
+        email_html = get_template('email.html')
+        email_context = {
+            "guest_name" : guest_obj.name,
+            "checkIn": booking_obj.checkIn,
+            "checkOut": booking_obj.checkOut,
+        }
+
+        email_content = email_html.render(email_context)
+        to_mail = booking_obj.reservationItem.hotel.email
+        _email = EmailMultiAlternatives(subject="Reservation from ND",from_email="nomandsdirect.lk <"+settings.EMAIL_HOST_USER+">", to=[to_mail])
+        _email.attach_alternative(email_content,'text/html')
+        _email.send()
 
         return Response({"message": "success","data":booking_serializer.data}, status=status.HTTP_200_OK)
 
 
+def test(request):
+    return render(request,'email.html')

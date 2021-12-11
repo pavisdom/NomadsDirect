@@ -150,3 +150,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# EMAIL_HOST = 'mail.nomadsdirect.com'
+# EMAIL_PORT = 465
+# EMAIL_HOST_USER = 'booking@nomadsdirect.com'
+# EMAIL_HOST_PASSWORD = 'nomadswillcome2021'
+# EMAIL_USE_SSL = False
+# EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'mail.roomhunt.lk'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = 'notify@roomhunt.lk'
+EMAIL_HOST_PASSWORD = 'Notify@roomhunt.lk'
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True

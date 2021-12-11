@@ -29,6 +29,7 @@ urlpatterns = [
     path('services/search',nomand_view.HotelSearchView.as_view()),
     path('services/reservation',nomand_view.BookingAPIView.as_view()),
     path('services/hotelinfo/<int:id>',nomand_view.HotelInfoAPIView.as_view()),
+    path('test',nomand_view.test),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
