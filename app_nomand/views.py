@@ -19,7 +19,7 @@ from django.template import Context
 class ExperienceAPIView(APIView):
     def get(self,request):
         qs = Experience.objects.all()
-        serializer = ExperienceSerializer(qs,many=True)
+        serializer = ExperienceSerializer(qs,many=True,context={"request":request})
         return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
 
@@ -35,7 +35,6 @@ class LocationCountryAPIView(APIView):
         qs = LocationCountry.objects.all()
         serializer = LocationCountrySerializer(qs,many=True)
         return Response({"data":serializer.data},status=status.HTTP_200_OK)
-
 
 
 class FeaturedHotelsAPIView(APIView):

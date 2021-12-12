@@ -69,7 +69,8 @@ class HotelInfoSerializer(serializers.ModelSerializer):
     def to_representation(self, data):
         request = self.context.get('request')
         data = super(HotelInfoSerializer,self).to_representation(data)
-        data['hotel_image'] = [request.build_absolute_uri(val['image']) for val in data.get("hotel_image")]
+        # data['hotel_image'] = [request.build_absolute_uri(val['image']) for val in data.get("hotel_image")]
+        data['hotel_image'] = [val['image'] for val in data.get("hotel_image")]
 
         return data
 

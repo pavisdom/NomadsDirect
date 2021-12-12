@@ -15,7 +15,7 @@ class Experience(models.Model):
     expid = models.AutoField(primary_key=True)
     exptag = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(null=True, blank=True)
-    cover_image = models.ImageField(blank=True, null=True)
+    cover_image = models.ImageField(blank=True, null=True,upload_to="exp_images")
 
     def __str__(self):
         return f"{str(self.expid)}"
@@ -98,7 +98,7 @@ class HotelAmenities(models.Model):
 class HotelImages(models.Model):
     id = models.AutoField(primary_key=True)
     hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True,related_name='hotel_image')
-    image  = models.ImageField(max_length=200, blank=True, null=True)
+    image  = models.ImageField(max_length=200, blank=True, null=True,upload_to="hotel_images")
 
     def __str__(self):
         return f"{str(self.id)}. {self.hotel}"
