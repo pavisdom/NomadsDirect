@@ -1,4 +1,7 @@
+from django.core.exceptions import NON_FIELD_ERRORS
 from django.db import models
+from django.utils.translation import ugettext as _
+from django.core.exceptions import ValidationError
 
 # class ExperienceTags(models.Model):
 #     exptagid = models.AutoField(primary_key=True)
@@ -64,6 +67,17 @@ class HotelInfo(models.Model):
 
     def __str__(self):
         return f"{str(self.hotelid)}. {self.name}"
+
+    def clean(self):
+        if self.location_country and self.location_city:
+            if self.location_city.country != self.location_country:
+                raise ValidationError(_("county and city are mis-matched" ))
+
+    def save(self, *args, **kwargs):
+        if self.location_country is None:
+            self.location_country = self.location_city.country
+        self.full_clean()
+        super().save(*args,**kwargs)
 
     class Meta:
         db_table = 'HotelInfo'

@@ -25,7 +25,10 @@ class ExperienceAPIView(APIView):
 
 class LocationCityAPIView(APIView):
     def get(self,request):
+        country = request.GET.get("country")
         qs = LocationCity.objects.all()
+        if country:
+            qs = qs.filter(country_id=country)
         serializer = LocationCitySerializer(qs,many=True)
         return Response({"data":serializer.data},status=status.HTTP_200_OK)
 
@@ -65,8 +68,11 @@ class HotelSearchView(APIView):
             qs = qs.filter(location_city__cityid=city)
         if len(ex_tag):
             qs = qs.filter(experiances_tags__expid__in=ex_tag)
+
+        ex_qs = Experience.objects.filter(expid__in=ex_tag)
+        ex_serializer = ExperienceSerializer(ex_qs,many=True,context={"request":request})
         serializer = SearchHotelsSerializer(qs, many=True)
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+        return Response({"data": serializer.data, "experiences": ex_serializer.data}, status=status.HTTP_200_OK)
 
 
 class HotelInfoAPIView(APIView):
