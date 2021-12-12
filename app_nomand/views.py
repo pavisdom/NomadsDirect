@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app_admin.models import Admin
+from app_admin.models import PageAdmin
 from app_nomand.models import Experience, HotelInfo, LocationCity, LocationCountry
 from app_nomand.serializers import ExperienceSerializer, FeaturedHotelsSerializer, SearchHotelsSerializer, \
     HotelInfoSerializer, GuestInfoSerializer, BookingInfoSerializer, LocationCitySerializer, LocationCountrySerializer
@@ -154,7 +154,7 @@ class BookingAPIView(APIView):
             }
 
             email_content = email_html.render(email_context)
-            to_mail = Admin.objects.filter(is_active=True).values_list('email',flat=True)
+            to_mail = PageAdmin.objects.filter(is_active=True).values_list('email',flat=True)
             _email = EmailMultiAlternatives(subject="New Booking Request",from_email="nomandsdirect.lk <"+settings.EMAIL_HOST_USER+">", to=list(to_mail))
             _email.attach_alternative(email_content,'text/html')
             _email.send()
