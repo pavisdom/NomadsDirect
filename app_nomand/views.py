@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from app_admin.models import Admin
 from app_nomand.models import Experience, HotelInfo, LocationCity, LocationCountry
 from app_nomand.serializers import ExperienceSerializer, FeaturedHotelsSerializer, SearchHotelsSerializer, \
     HotelInfoSerializer, GuestInfoSerializer, BookingInfoSerializer, LocationCitySerializer, LocationCountrySerializer
@@ -135,22 +136,33 @@ class BookingAPIView(APIView):
             # return Response({"message": "booking info invalid","data":booking_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
             return NDResponse(status.HTTP_400_BAD_REQUEST,message="booking info invalid", data=booking_serializer.errors)
 
-        # todo: an email sends to hotel
-        email_html = get_template('email.html')
-        email_context = {
-            "guest_name" : guest_obj.name,
-            "checkIn": booking_obj.checkIn,
-            "checkOut": booking_obj.checkOut,
-        }
+        ### send an email to ND admin
+        # this segment should move to post signal
+        is_email_send = True
+        try:
+            email_html = get_template('email.html')
+            email_context = {
+                "guest_name" : guest_obj.name,
+                "guest_contact" : guest_obj.contactNumber,
+                "guest_email" : guest_obj.email,
+                "reservation_item": booking_obj.reservationItem.reservation_item,
+                "hotel_name": booking_obj.reservationItem.hotel.name,
+                "location": booking_obj.reservationItem.hotel.location,
+                "experiences": booking_obj.reservationItem.hotel.experiences_list,
+                "checkIn": booking_obj.checkIn,
+                "checkOut": booking_obj.checkOut,
+            }
 
-        email_content = email_html.render(email_context)
-        to_mail = booking_obj.reservationItem.hotel.email
-        _email = EmailMultiAlternatives(subject="Reservation from ND",from_email="nomandsdirect.lk <"+settings.EMAIL_HOST_USER+">", to=[to_mail])
-        _email.attach_alternative(email_content,'text/html')
-        _email.send()
+            email_content = email_html.render(email_context)
+            to_mail = Admin.objects.filter(is_active=True).values_list('email',flat=True)
+            _email = EmailMultiAlternatives(subject="New Booking Request",from_email="nomandsdirect.lk <"+settings.EMAIL_HOST_USER+">", to=list(to_mail))
+            _email.attach_alternative(email_content,'text/html')
+            _email.send()
+        except:
+            is_email_send = False
 
         # return Response({"message": "success","data":booking_serializer.data}, status=status.HTTP_200_OK)
-        return NDResponse(status.HTTP_201_CREATED,data=booking_serializer.data)
+        return NDResponse(status.HTTP_201_CREATED,data=booking_serializer.data,is_email_send=is_email_send)
 
 
 def test(request):

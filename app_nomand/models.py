@@ -79,6 +79,15 @@ class HotelInfo(models.Model):
         self.full_clean()
         super().save(*args,**kwargs)
 
+    @property
+    def location(self):
+        return f"{self.location_street}, {self.location_city.city_name}, {self.location_country.country_name}"
+
+    @property
+    def experiences_list(self):
+        return ", ".join([str(ex.exptag) for ex in self.experiances_tags.all()])
+
+
     class Meta:
         db_table = 'HotelInfo'
 

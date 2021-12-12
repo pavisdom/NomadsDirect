@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
 
-    'app_nomand'
+    'app_nomand',
+    'app_admin'
 ]
 
 MIDDLEWARE = [
