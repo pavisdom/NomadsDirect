@@ -14,13 +14,15 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 
+from src.utils import NDResponse
 
 
 class ExperienceAPIView(APIView):
     def get(self,request):
         qs = Experience.objects.all()
         serializer = ExperienceSerializer(qs,many=True,context={"request":request})
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        # return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_200_OK,data=serializer.data)
 
 
 class LocationCityAPIView(APIView):
@@ -30,21 +32,25 @@ class LocationCityAPIView(APIView):
         if country:
             qs = qs.filter(country_id=country)
         serializer = LocationCitySerializer(qs,many=True)
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        # return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_200_OK,data=serializer.data)
 
 
 class LocationCountryAPIView(APIView):
     def get(self,request):
         qs = LocationCountry.objects.all()
         serializer = LocationCountrySerializer(qs,many=True)
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        # return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_200_OK,data=serializer.data)
 
 
 class FeaturedHotelsAPIView(APIView):
     def get(self,request):
         qs = HotelInfo.objects.all()
         serializer = FeaturedHotelsSerializer(qs,many=True)
-        return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        # return Response({"data":serializer.data},status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_200_OK,data=serializer.data)
+
 
 class HotelSearchView(APIView):
     def put(self,request):
@@ -72,7 +78,8 @@ class HotelSearchView(APIView):
         ex_qs = Experience.objects.filter(expid__in=ex_tag)
         ex_serializer = ExperienceSerializer(ex_qs,many=True,context={"request":request})
         serializer = SearchHotelsSerializer(qs, many=True)
-        return Response({"data": serializer.data, "experiences": ex_serializer.data}, status=status.HTTP_200_OK)
+        # return Response({"data": serializer.data, "experiences": ex_serializer.data}, status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_200_OK,data=serializer.data,experiences=ex_serializer.data)
 
 
 class HotelInfoAPIView(APIView):
@@ -85,7 +92,8 @@ class HotelInfoAPIView(APIView):
     def get(self,request,id):
         obj = self.get_object(id)
         serializer = HotelInfoSerializer(obj,context={'request':request})
-        return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+        # return Response({"data": serializer.data}, status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_200_OK,data=serializer.data)
 
 
 class BookingAPIView(APIView):
@@ -114,7 +122,9 @@ class BookingAPIView(APIView):
         if guest_serializer.is_valid():
             guest_obj = guest_serializer.save()
         else:
-            return Response({"message": "guest info invalid","data":guest_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            # return Response({"message": "guest info invalid","data":guest_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return NDResponse(status.HTTP_400_BAD_REQUEST,message="guest info invalid", data=guest_serializer.errors)
+
         booking_data = requestData['bookingInfo']
         booking_data['guest'] = guest_obj.guestid
         booking_serializer = BookingInfoSerializer(data=booking_data)
@@ -122,7 +132,8 @@ class BookingAPIView(APIView):
         if booking_serializer.is_valid():
             booking_obj = booking_serializer.save()
         else:
-            return Response({"message": "booking info invalid","data":booking_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            # return Response({"message": "booking info invalid","data":booking_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            return NDResponse(status.HTTP_400_BAD_REQUEST,message="booking info invalid", data=booking_serializer.errors)
 
         # todo: an email sends to hotel
         email_html = get_template('email.html')
@@ -138,7 +149,8 @@ class BookingAPIView(APIView):
         _email.attach_alternative(email_content,'text/html')
         _email.send()
 
-        return Response({"message": "success","data":booking_serializer.data}, status=status.HTTP_200_OK)
+        # return Response({"message": "success","data":booking_serializer.data}, status=status.HTTP_200_OK)
+        return NDResponse(status.HTTP_201_CREATED,data=booking_serializer.data)
 
 
 def test(request):
