@@ -108,7 +108,7 @@ class HotelReservationItem(models.Model):
 
 class HotelAmenities(models.Model):
     id = models.AutoField(primary_key=True)
-    hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True)
+    hotel = models.ForeignKey(HotelInfo, on_delete=models.PROTECT, null=True, related_name='amenities')
     item_name  = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
