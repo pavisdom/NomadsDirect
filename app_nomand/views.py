@@ -68,7 +68,7 @@ class HotelSearchView(APIView):
         :return:
         """
         requestData = request.data
-        ex_tag = requestData.get("ExperianceTags",[])
+        ex_tag = requestData.get("experianceTags",[])
         city = requestData.get("city")
         qs = HotelInfo.objects.all()
         if city:
